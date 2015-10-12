@@ -44,8 +44,10 @@ namespace NHibernate.Loader.Criteria
 
 		private readonly ICollection<IParameterSpecification> collectedParameterSpecifications;
 		private readonly ICollection<NamedParameter> namedParameters;
+	    private IType[] _cachedProjectedTypes;
+	    private string[] _cachedProjectedColumnAliases;
 
-		public CriteriaQueryTranslator(ISessionFactoryImplementor factory, CriteriaImpl criteria, string rootEntityName,
+	    public CriteriaQueryTranslator(ISessionFactoryImplementor factory, CriteriaImpl criteria, string rootEntityName,
 									   string rootSQLAlias, ICriteriaQuery outerQuery)
 			: this(factory, criteria, rootEntityName, rootSQLAlias)
 		{
@@ -172,15 +174,25 @@ namespace NHibernate.Loader.Criteria
 		}
 
 
-		public IType[] ProjectedTypes
-		{
-			get { return rootCriteria.Projection.GetTypes(rootCriteria, this); }
-		}
+        public IType[] ProjectedTypes
+        {
+            get
+            {
+                if (_cachedProjectedTypes == null)
+                    _cachedProjectedTypes = rootCriteria.Projection.GetTypes(rootCriteria, this);
+                return _cachedProjectedTypes;
+            }
+        }
 
-		public string[] ProjectedColumnAliases
-		{
-			get { return rootCriteria.Projection.GetColumnAliases(0, rootCriteria, this); }
-		}
+        public string[] ProjectedColumnAliases
+        {
+            get
+            {
+                if (_cachedProjectedColumnAliases == null)
+                    _cachedProjectedColumnAliases = rootCriteria.Projection.GetColumnAliases(0, rootCriteria, this);
+                return _cachedProjectedColumnAliases;
+            }
+        }
 
 		public string[] ProjectedAliases
 		{
