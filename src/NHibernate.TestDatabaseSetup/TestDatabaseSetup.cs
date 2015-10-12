@@ -67,7 +67,7 @@ namespace NHibernate.TestDatabaseSetup
 						Console.WriteLine(e);
 					}
 
-					cmd.CommandText = "create database nhibernate";
+                    cmd.CommandText = "create database nhibernate COLLATE Latin1_General_CI_AS; ALTER database nhibernate set COMPATIBILITY_LEVEL = 100;";
 					cmd.ExecuteNonQuery();
 				}
 			}
